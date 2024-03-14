@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panier d'achat</title>
+<link rel="stylesheet" href="SHOPPINGCARD.css">
+<style>
+    .item {
+        margin-bottom: 10px;
+    }
+    .item button {
+        margin-left: 10px;
+    }
+    .liked {
+        color: red;
+    }
+</style>
+</head>
+<body>
+    <h1 class="oooh-baby-regular">HEALTHWEARHOUSE </h1>
+    <div id="cart">
+        <!-- ARTICLE NUMERO 1-->
+        <div class="item">
+            <img src="assets/blouse1.jpeg" alt="Article 1">
+            <span>Article 1 - Price: $3000</span>
+            <button style="color: black;" class="increase">+</button>
+            <span class="quantity">1</span>
+            <button style="color: black;" class="decrease">-</button>
+            <button class="remove">Supprimer</button>
+            <button class="like">❤</button>
+        </div>
+         <!-- ARTICLE NUMERO 1-->
+        <div class="item">
+            <img src="assets/tenue4.jpeg" alt="Article 2">
+            <span style="color: white;">Article 2 - Price: $2500</span>
+            <button style="color: black;" class="increase">+</button>
+            <span class="quantity">1</span>
+            <button style="color: black;" class="decrease">-</button>
+            <button class="remove">Supprimer</button>
+            <button class="like">❤</button>
+        </div>
+        <div style="color: white;" id="total">Total: $0 </div>
+    </div>
+
+    <button><a href="index.html">Back TO Landing Page</a></button>
+
+<script>
+    const cart = document.getElementById('cart');
+    const items = cart.getElementsByClassName('item');
+    let total = 30;
+
+
+    function updateTotal() {
+        let totalPrice = 0;
+        for (let item of items) {
+            const quantity = parseInt(item.getElementsByClassName('quantity')[0].textContent);
+            const price = parseInt(item.textContent.match(/\$\d+/)[0].slice(1)); // Récupère le prix à partir du texte
+            totalPrice += quantity * price;
+        }
+        document.getElementById('total').textContent = `Total: $${totalPrice}`;
+    }
+
+    function handleQuantityButtons(btnClass, increment) {
+        cart.addEventListener('click', function(event) {
+            if (event.target.classList.contains(btnClass)) {
+                const quantityElement = event.target.parentElement.getElementsByClassName('quantity')[0];
+                let quantity = parseInt(quantityElement.textContent);
+                if (increment) {
+                    quantity++;
+                } else {
+                    quantity = Math.max(quantity - 1, 0);
+                }
+                quantityElement.textContent = quantity;
+                updateTotal();
+            }
+        });
+    }
+
+    handleQuantityButtons('increase', true);
+    handleQuantityButtons('decrease', false);
+
+    cart.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove')) {
+            event.target.parentElement.remove();
+            updateTotal();
+        } else if (event.target.classList.contains('like')) {
+            event.target.classList.toggle('liked');
+        }
+    });
+</script>
+</body>
+</html>
