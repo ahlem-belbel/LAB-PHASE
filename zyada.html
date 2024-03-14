@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panier d'achat</title>
+<style>
+    .item {
+        margin-bottom: 10px;
+    }
+    .item button {
+        margin-left: 10px;
+    }
+    .liked {
+        color: red;
+    }
+</style>
+</head>
+<body>
+<div id="cart">
+    <div class="item">
+        <span>Article 1 - Prix: $10</span>
+        <button class="increase">+</button>
+        <span class="quantity">1</span>
+        <button class="decrease">-</button>
+        <button class="remove">Supprimer</button>
+        <button class="like">❤</button>
+    </div>
+    <div class="item">
+        <span>Article 2 - Prix: $20</span>
+        <button class="increase">+</button>
+        <span class="quantity">1</span>
+        <button class="decrease">-</button>
+        <button class="remove">Supprimer</button>
+        <button class="like">❤</button>
+    </div>
+    <div id="total">Total: $30</div>
+</div>
+
+<script>
+    const cart = document.getElementById('cart');
+    const items = cart.getElementsByClassName('item');
+    let total = 30;
+
+    function updateTotal() {
+        let totalPrice = 0;
+        for (let item of items) {
+            const quantity = parseInt(item.getElementsByClassName('quantity')[0].textContent);
+            const price = parseInt(item.textContent.match(/\$\d+/)[0].slice(1)); // Récupère le prix à partir du texte
+            totalPrice += quantity * price;
+        }
+        document.getElementById('total').textContent = `Total: $${totalPrice}`;
+    }
+
+    function handleQuantityButtons(btnClass, increment) {
+        cart.addEventListener('click', function(event) {
+            if (event.target.classList.contains(btnClass)) {
+                const quantityElement = event.target.parentElement.getElementsByClassName('quantity')[0];
+                let quantity = parseInt(quantityElement.textContent);
+                if (increment) {
+                    quantity++;
+                } else {
+                    quantity = Math.max(quantity - 1, 0);
+                }
+                quantityElement.textContent = quantity;
+                updateTotal();
+            }
+        });
+    }
+
+    handleQuantityButtons('increase', true);
+    handleQuantityButtons('decrease', false);
+
+    cart.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove')) {
+            event.target.parentElement.remove();
+            updateTotal();
+        } else if (event.target.classList.contains('like')) {
+            event.target.classList.toggle('liked');
+        }
+    });
+</script>
+</body>
+</html>
